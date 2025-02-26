@@ -9,19 +9,23 @@ dict's random numbers of keys should be letter,
 dict's values should be a number (0-100),
 example:[{'a': 5, 'b': 7, 'g': 11}, {'a': 3, 'c': 35, 'g': 42}]
 '''
-rInt = lambda start, end: random.randint(start, end)
+ls = list()
+for i in range(random.randint(2, 10)):
+    available_letters = [chr(i) for i in list(range(97, 123))]  # Creating list of available letters and reseting on each iteration
+    currentDict = dict()  # New dict
+    for j in range(random.randint(2, 10)):
+        currentDict[
+            available_letters.pop(
+                available_letters.index(
+                    random.choice(available_letters)
+                )
 
-ls = [
-      {
-            chr(rInt(97, 122)): rInt(0, 100),
-            chr(rInt(97, 122)): rInt(0, 100),
-            chr(rInt(97, 122)): rInt(0, 100)
-       }
-      for j in range(rInt(2, 10))
-]
+            )
+        ] = random.randint(0, 100)
+
+    ls.append(currentDict)  # Adding our dict to list
 
 print(ls)
-
 '''
 2. get previously generated list of dicts and create one common dict:
 
