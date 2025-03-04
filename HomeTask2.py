@@ -35,7 +35,7 @@ print(']\n')
 if dicts have same key, we will take max value, and rename key with dict number with max value
 if key is only in one dict - take it as is,
 example:{'a_1': 5, 'b': 7, 'c': 35, 'g_2': 42}
-Each line of code should be commented with description.
+Each line of code should be commented with description. 
 '''
 res = dict()
 ignoring_letters_list = []
