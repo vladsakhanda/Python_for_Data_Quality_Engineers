@@ -1,65 +1,39 @@
-'''
-Commit script to git repository and provide link as home task result.
-'''
 import random
 
-''' 
-1. create a list of random number of dicts (from 2 to 10)
-dict's random numbers of keys should be letter,
-dict's values should be a number (0-100),
-example:[{'a': 5, 'b': 7, 'g': 11}, {'a': 3, 'c': 35, 'g': 42}]
-'''
-ls = list()
-for i in range(random.randint(2, 10)):
-    available_letters = [chr(i) for i in list(range(97, 123))]  # Creating list of available letters and reseting on each iteration
-    current_dict = dict()  # New dict
-    for j in range(random.randint(2, 10)):
-        current_dict[
-            available_letters.pop(
-                available_letters.index(
-                    random.choice(available_letters)
-                )
+def generate_random_dict():
+    """Generate a dictionary with random keys (letters) and random values (numbers 0-100)."""
+    keys_count = random.randint(2, 10)
+    keys = random.sample('abcdefghijklmnopqrstuvwxyz', keys_count)
+    return {key: random.randint(0, 100) for key in keys}
 
-            )
-        ] = random.randint(0, 100)
+def create_dict_list(count):
+    """Create a list of random number of dictionaries."""
+    return [generate_random_dict() for _ in range(random.randint(2, count))]
 
-    ls.append(current_dict)  # Adding our dict to list
+def prettify_print(lst):
+    """Print list elements in a more structured format."""
+    print('[')
+    for d in lst:
+        print(d)
+    print(']\n')
 
-print('[')
-prettified_output = [print(d) for d in ls] # Funny way to print something using comprehensions :)
-print(']\n')
-
-'''
-2. get previously generated list of dicts and create one common dict:
-
-if dicts have same key, we will take max value, and rename key with dict number with max value
-if key is only in one dict - take it as is,
-example:{'a_1': 5, 'b': 7, 'c': 35, 'g_2': 42}
-Each line of code should be commented with description. 
-'''
-res = dict()
-ignoring_letters_list = []
-for i in range(len(ls)):
-    for j in ls[i]:
-        current_letter = str(j)
-
-        if current_letter not in ignoring_letters_list:
-            current_dict = {i + 1: ls[i][j]}
-            ignoring_letters_list.append(current_letter)
-
-            for k in range(i + 1, len(ls)):
-                for m in ls[k]:
-                    if j == m:
-                        current_dict[k + 1] = ls[k][m]
-
-            if len(current_dict) < 2:
-                res[str(j)] = ls[i][j]
+def merge_dictionaries(dict_list):
+    """Merge dictionaries to form a new dictionary based on specified rules."""
+    result_dict = {}
+    for index, current_dict in enumerate(dict_list):
+        for key, value in current_dict.items():
+            new_key = f"{key}_{index + 1}"
+            if key in result_dict:
+                if result_dict[key][1] < value:
+                    result_dict[key] = (new_key, value)
             else:
-                number_of_dict = max_value = max(current_dict.values())
-                for key, value in current_dict.items():
-                    if max_value == value:
-                        number_of_dict = key
-                        res[f'{j}_{key}'] = max_value
-                        break
+                result_dict[key] = (new_key, value)
 
-print(res)
+    return {k if v[0] == k else v[0]: v[1] for k, v in result_dict.items()}
+
+# Main Execution
+if __name__ == "__main__":
+    list_of_dicts = create_dict_list(10)
+    prettify_print(list_of_dicts)
+    merged_dict = merge_dictionaries(list_of_dicts)
+    print(merged_dict)
