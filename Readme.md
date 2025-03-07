@@ -1,38 +1,13 @@
-# Classes. OOP
+# Module. Files.
 
-### Create a tool, which will do user generated news feed:
+Expand previous Homework 5 with additional class, which allow to provide records by text file:
 
-1.User select what data type he wants to add
+1.Define your input format (one or many records)
+2.Default folder or user provided file path
 
-2.Provide record type required data
+3.Remove file if it was successfully processed
 
-3.Record is published on text file in special format
+4.Apply case normalization functionality form Homework 3/4
 
-### You need to implement:
-
-1.News – text and city as input. Date is calculated during publishing.
-
-2.Private ad – text and expiration date as input. Day left is calculated during publishing.
-
-3.Your unique one with unique publish rules.
-
-### Example
-News feed:
-News -------------------------
-Something happened
-London, 03/01/2021 13.45
-
-News -------------------------
-Something other happened
-Minsk, 24/01/2021 20.33
-
-Private Ad ------------------
-I want to sell a bike
-Actual until: 01/03/2021, 21 days left
-
-Joke of the day ------------
-Did you hear about the claustrophobic astronaut?
-He just needed a little space
-Funny meter – three of ten
 
 
