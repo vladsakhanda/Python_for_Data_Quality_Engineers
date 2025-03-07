@@ -72,4 +72,3 @@ final_text, total_whitespaces = process_text(text)
 
 print(f'Number of whitespace characters: {total_whitespaces}\n')
 print(final_text)
-a
