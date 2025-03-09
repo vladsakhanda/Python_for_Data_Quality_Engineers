@@ -1,6 +1,7 @@
 import os
 
 DEFAULT_FILE = 'default_news_feed.txt'
+DEFAULT_JSON_FILE = 'default_news_feed.json'
 
 class FileProcessor:
 

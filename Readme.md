@@ -1,14 +1,12 @@
-# CSV Parsing
+## JSON Module
 
-Calculate number of words and letters from previous Homeworks 5/6 output test file.
-Create two csv:
+Expand previous Homework 5/6/7 with additional class, which allow to provide records by JSON file:
 
-1.word-count (all words are preprocessed in lowercase)
+1.Define your input format (one or many records)
 
-2.letter, cout_all, count_uppercase, percentage (add header, spacecharacters are not included)
+2.Default folder or user provided file path
 
-CSVs should be recreated each time new record added.
-
-
+3.Remove file if it was successfully processed
+    
 
 
