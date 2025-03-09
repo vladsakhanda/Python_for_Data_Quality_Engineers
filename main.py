@@ -23,10 +23,10 @@ while not is_exit:
 6. Add entries from a text file to default file
 7, Exit
 
-You choose: ''')
+You choose: ''').upper()
 
     print('---\n')
-    if user_input in ('1', 'News', '1. News'):
+    if user_input in ('1', 'News'.upper(), '1. News'.upper()):
         user_text = input('You chose News! Enter news text: ')
         city = input('Enter your city: ')
         news = Feeds.News(normalize_text(user_text), normalize_text(city))
@@ -35,7 +35,7 @@ You choose: ''')
         FileProcessor.append_to_file(DEFAULT_FILE, str(news))
 
         is_exit = exit()
-    elif user_input in ('2', 'Private Ad', '2. Private Ad'):
+    elif user_input in ('2', 'Private Ad'.upper(), '2. Private Ad'.upper()):
         text = normalize_text(input('You chose Private Ad! Enter private ad text: '))
         expiration_date = None
 
@@ -51,7 +51,7 @@ You choose: ''')
                 is_exit = exit()
             else:
                 print('\nYour date is in the incorrect format.\n\n')
-    elif user_input in ('3', 'Lucky Number', '3. Lucky Number'):
+    elif user_input in ('3', 'Lucky Number'.upper(), '3. Lucky Number'.upper()):
         name = input('You chose Lucky Number! Enter your name: ')
         lucky_number = Feeds.LuckyNumber(normalize_text(name))
         print('\nThe next lucky number were added:', lucky_number, end='\n\n')
@@ -59,7 +59,7 @@ You choose: ''')
         FileProcessor.append_to_file(DEFAULT_FILE, str(lucky_number))
 
         is_exit = exit()
-    elif user_input in ('4', 'Show news feed', '4. Show news feed'):
+    elif user_input in ('4', 'Show news feed'.upper(), '4. Show news feed'.upper()):
         print('News feed (from default file):\n---')
         content = FileProcessor.read_from_file(DEFAULT_FILE)
         if content:
@@ -68,7 +68,7 @@ You choose: ''')
             print('---')
         else:
             print("No news feed available.")
-    elif user_input in ('5', 'Show News feed from specific file', '5. Show News feed from a specific file'):
+    elif user_input in ('5', 'Show News feed from specific file'.upper(), '5. Show News feed from a specific file'.upper()):
         file_path = input('Enter the file path: ')
         content = FileProcessor.read_from_file(file_path)
 
@@ -80,7 +80,7 @@ You choose: ''')
             print(f"No news feed available in {file_path}.")
 
         is_exit = exit()
-    elif user_input in ('6', 'Add entries from a text file', '6. Add entries from a text file'):
+    elif user_input in ('6', 'Add entries from a text file'.upper(), '6. Add entries from a text file'.upper()):
         file_path = input('Enter the file path of entries: ')
         content = normalize_text(FileProcessor.read_from_file(file_path))
 
@@ -92,7 +92,7 @@ You choose: ''')
             print('File not found or empty.')
 
         is_exit = exit()
-    elif user_input in ('7', 'Exit', '7. Exit'):
+    elif user_input in ('7', 'Exit'.upper(), '7. Exit'.upper()):
         is_exit = True
     else:
         print('No such option.', end=' ')
