@@ -2,7 +2,6 @@ import os
 
 DEFAULT_FILE = 'default_news_feed.txt'
 
-
 class FileProcessor:
 
     @staticmethod

@@ -1,5 +1,5 @@
 from FileProcessor import FileProcessor, DEFAULT_FILE
-from Functions import str_to_date_format, normalize_text
+from Functions import str_to_date_format, normalize_text, csv_parsing
 from classes.LuckyNumber import LuckyNumber
 from classes.News import News
 from classes.PrivateAd import PrivateAd
@@ -36,6 +36,7 @@ You choose: ''')
         print('\nThe next news were added:', news, end='\n\n')
 
         FileProcessor.append_to_file(DEFAULT_FILE, str(news))
+        csv_parsing(DEFAULT_FILE)
 
         objects.append(news)
 
@@ -55,6 +56,7 @@ You choose: ''')
 
                 FileProcessor.append_to_file(DEFAULT_FILE, str(private_ad))
                 objects.append(private_ad)
+                csv_parsing(DEFAULT_FILE)
 
                 is_exit = exit()
             else:
@@ -65,6 +67,7 @@ You choose: ''')
 
         FileProcessor.append_to_file(DEFAULT_FILE, str(lucky_number))
         objects.append(lucky_number)
+        csv_parsing(DEFAULT_FILE)
 
         is_exit = exit()
     elif user_input in ('4', 'News feed', '4. News feed'):
@@ -96,6 +99,7 @@ You choose: ''')
             FileProcessor.append_to_file(DEFAULT_FILE, content)
             FileProcessor.remove_file(file_path)
             print('\nEntries from the text file have been processed and added to the news feed.')
+            csv_parsing(DEFAULT_FILE)
         else:
             print('File not found or empty.')
 
