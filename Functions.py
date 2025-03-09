@@ -13,6 +13,7 @@ def str_to_date_format(date: str, date_format: str):
     except ValueError or TypeError:
         return None
 
+
 def normalize_text(text: str):
     new_text = ''
     number_of_whitespace_characters = 0
