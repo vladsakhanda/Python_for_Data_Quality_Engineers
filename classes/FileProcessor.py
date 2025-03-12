@@ -1,16 +1,17 @@
+import csv
 import os
 import re
+from collections import Counter
 from datetime import datetime
-
 
 from classes.Feeds import *
 
 
 class FileProcessor:
     _DEFAULT_FILE = 'feeds.txt'
-    VALID_TYPES = ('txt',)
+    VALID_TYPES = ('txt', 'csv')
     _VALID_FEEDS = (Feeds.News, Feeds.PrivateAd, Feeds.LuckyNumber)
-    # _VALID_TYPES = ('txt', 'css', 'json', 'xml')
+    # _VALID_TYPES = ('txt', 'csv', 'json', 'xml')
 
     _DEFAULT_FOLDER = 'default'
     _DEFAULT_DESTINATION_PATH = _DEFAULT_FOLDER + '/feeds.txt'
@@ -81,6 +82,8 @@ class FileProcessor:
         with open(self._DEFAULT_DESTINATION_PATH, 'a') as file:
             file.write(str(feed) + "\n")
 
+        self.csv_parsing(self._DEFAULT_DESTINATION_PATH)
+
     def append_all_feeds_from_file(self):
         feeds_from_file = []
 
@@ -101,14 +104,28 @@ class FileProcessor:
         print(f'File {self._path} has been removed.')
         os.remove(self._path)
 
+        self.csv_parsing(self._DEFAULT_DESTINATION_PATH)
 
-    # def remove_file(self._path):
-    #     if os.path.exists(self._path):
-    #         os.remove(self._path)
+    def csv_parsing(self, path: str):
+        with open(path, "r") as file:
+            text = file.read()
 
-    # def read_from_file(file_path):
-    #     if os.path.exists(file_path):
-    #         with open(file_path, 'r') as file:
-    #             return file.read()
-    #     return None
-    #
+        words = re.findall(r'\b\w+\b', text.lower())
+        word_counts = Counter(words)
+        with open(self._DEFAULT_FOLDER + "/word_count.csv", "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["word", "count"])
+            for word, count in word_counts.items():
+                writer.writerow([word, count])
+
+        letters = [char for char in text if char.isalpha()]
+        letter_counts = Counter(letters)
+        uppercase_counts = Counter(c for c in text if c.isupper())
+        total_letters = sum(letter_counts.values())
+        with open(self._DEFAULT_FOLDER + "/letter_count.csv", "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["letter", "count_all", "count_uppercase", "percentage"])
+            for letter, count in sorted(letter_counts.items()):
+                uppercase_count = uppercase_counts.get(letter.upper(), 0)
+                percentage = (count / total_letters) * 100
+                writer.writerow([letter, count, uppercase_count, f"{percentage:.2f}"])
