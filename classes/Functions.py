@@ -1,7 +1,7 @@
+import os
 from datetime import datetime
-import csv
-import re
-from collections import Counter
+
+from classes.FileProcessor import FileProcessor
 
 
 def str_to_date_format(date: str, date_format: str):
@@ -16,15 +16,12 @@ def str_to_date_format(date: str, date_format: str):
     except ValueError or TypeError:
         return None
 
+
 def normalize_text(text: str):
     new_text = ''
-    number_of_whitespace_characters = 0
 
     make_upper_case_next_word = True
     for symbol in text:
-        if symbol.isspace():
-            number_of_whitespace_characters += 1
-
         if make_upper_case_next_word and symbol.isalpha():
             symbol = symbol.upper()
             make_upper_case_next_word = False
@@ -35,26 +32,48 @@ def normalize_text(text: str):
 
     return new_text
 
-def csv_parsing(default_file_path: str):
-    with open(default_file_path, "r") as file:
-        text = file.read()
 
-    words = re.findall(r'\b\w+\b', text.lower())
-    word_counts = Counter(words)
-    with open("word_count.csv", "w", newline="", encoding="utf-8") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["word", "count"])
-        for word, count in word_counts.items():
-            writer.writerow([word, count])
+@DeprecationWarning
+def exit():
+    if input('Type \'E\' if you want to exit. Type anything if you want to add something else: ').upper() == 'E':
+        print()
+        return True
+    else:
+        return False
 
-    letters = [char for char in text if char.isalpha()]
-    letter_counts = Counter(letters)
-    uppercase_counts = Counter(c for c in text if c.isupper())
-    total_letters = sum(letter_counts.values())
-    with open("letter_count.csv", "w", newline="", encoding="utf-8") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["letter", "count_all", "count_uppercase", "percentage"])
-        for letter, count in sorted(letter_counts.items()):
-            uppercase_count = uppercase_counts.get(letter.upper(), 0)
-            percentage = (count / total_letters) * 100
-            writer.writerow([letter, count, uppercase_count, f"{percentage:.2f}"])
+
+def choose_file_type():
+    """Prompt the user to choose a valid file type from a predefined list.
+
+        The function repeatedly asks for input until a valid file type is selected.
+        Valid file types are defined within the function as ('txt', 'css', 'json', 'xml').
+
+        Returns:
+            str: The chosen file type, which is guaranteed to be valid.
+
+        Raises:
+            None.
+    """
+    while True:
+        file_type = input(f"Supported types are: {FileProcessor.VALID_TYPES}. Choose file type: ").strip()
+
+        if file_type not in FileProcessor.VALID_TYPES:
+            print(f"\nInvalid input. Supported types are: {FileProcessor.VALID_TYPES}.\n")
+            continue
+
+        print(f"{file_type} type has been chosen.\n")
+
+        return file_type
+
+
+def choose_file_path():
+    while True:
+        file_path = input(f"Enter the path to your file: ").strip()
+
+        if not os.path.isfile(file_path):
+            print("\nThe file doesn't exist or the path is incorrect. Please try again.\n")
+            continue
+
+        print(f"\nFile path '{file_path}'  type has been chosen.")
+
+        return file_path
