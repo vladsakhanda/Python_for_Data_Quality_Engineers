@@ -9,9 +9,8 @@ from classes.Feeds import *
 
 class FileProcessor:
     _DEFAULT_FILE = 'feeds.txt'
-    VALID_TYPES = ('txt', 'csv')
+    VALID_TYPES = ('txt', 'css', 'json',)
     _VALID_FEEDS = (Feeds.News, Feeds.PrivateAd, Feeds.LuckyNumber)
-    # _VALID_TYPES = ('txt', 'csv', 'json', 'xml')
 
     _DEFAULT_FOLDER = 'default'
     _DEFAULT_DESTINATION_PATH = _DEFAULT_FOLDER + '/feeds.txt'
