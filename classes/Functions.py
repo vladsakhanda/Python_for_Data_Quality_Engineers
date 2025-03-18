@@ -41,7 +41,6 @@ def exit():
     else:
         return False
 
-
 def choose_file_type():
     """Prompt the user to choose a valid file type from a predefined list.
 

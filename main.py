@@ -1,6 +1,5 @@
-from classes.FileProcessor import FileProcessor
-from classes.Functions import *
 from classes.Feeds import Feeds
+from classes.Functions import *
 
 
 def first_choice_flow():
@@ -53,30 +52,28 @@ You choose: ''').upper()
 
 
 def second_choice_flow():
-    # is_exit = False
-    # while not is_exit:
-    #     is_exit = True
     print('---')
     print('2. Add feeds from one of the default files\n')
 
     file_type = choose_file_type()
+
     file_processor = FileProcessor(None, file_type)
     print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
-
     file_processor.append_all_feeds_from_file()
-
 
 def third_choice_flow():
     print('---')
     print('3. Add feeds from a specific file\n')
 
-    file_type = choose_file_type()
-    file_path = choose_file_path()
-
-    file_processor = FileProcessor(file_path, file_type)
-    print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
-
-    file_processor.append_all_feeds_from_file()
+    while True:
+        try:
+            file_path = choose_file_path()
+            file_processor = FileProcessor(file_path)
+            print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
+            file_processor.append_all_feeds_from_file()
+            break
+        except TypeError as e:
+            print(e, end='\n\n')
 
 
 print('Hello!', end=' ')
