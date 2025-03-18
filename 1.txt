@@ -1,1 +1,2 @@
-News: txt, 1, 12/03/2025 15.18
+News, Vlad, Kyiv
+Lucky Number, Vlad

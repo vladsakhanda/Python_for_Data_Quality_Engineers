@@ -49,10 +49,10 @@ class Feeds:
             }
 
     class News:
-        def __init__(self, text: str, city: str, date=None):
+        def __init__(self, text: str, city: str):
             self.text = text
             self.city = city
-            self.date = date if date else datetime.now().strftime(DATETIME_FORMAT)
+            self.date = datetime.now().strftime(DATETIME_FORMAT)
 
         def __str__(self):
             return f"News: {self.text}, {self.city}, {self.date} "
@@ -61,8 +61,7 @@ class Feeds:
             return {
                 "type": "news",
                 "text": self.text,
-                "city": self.city,
-                "date": self.date
+                "city": self.city
             }
 
     class PrivateAd:

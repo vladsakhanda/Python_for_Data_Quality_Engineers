@@ -1,3 +1,2 @@
-News: csv, Eq, 12/03/2025 15.18
-Lucky Number: csv, your lucky number is 91!
-Private Ad: csv, until: 11/11/2011, -333590 days left
+News, Vlad, Kyiv
+Lucky Number, Vlad

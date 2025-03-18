@@ -1,18 +1,11 @@
 [
     {
-        "type": "private_ad",
-        "text": "Ewq",
-        "expiration_date": "11/11/1111"
-    },
-    {
         "type": "news",
-        "text": "csv",
-        "city": "Eq",
-        "date": "12/03/2025 15.18"
+        "text": "Vlad",
+        "city": "Kyiv"
     },
     {
         "type": "lucky_number",
-        "name": "Vlad",
-        "lucky_number": 16
+        "name": "Vlad"
     }
 ]

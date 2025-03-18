@@ -45,6 +45,16 @@ class FileProcessor:
     def __str__(self):
         return f"FileProcessor(path='{self._path}', type='{self._type}')"
 
+    @property
+    def get_path(self):
+        """Get the file path."""
+        return self._path
+
+    @property
+    def get_type(self):
+        """Get the file type."""
+        return self._type
+
     def identify_type_of_file(self, path):
         for type in FileProcessor.VALID_TYPES:
             if path.endswith(type):
@@ -68,18 +78,6 @@ class FileProcessor:
         if not self._path.endswith('.' + self._type):
             raise TypeError(
                 f"File type does not match requirements for type. It is expected: '{self._type}'.")
-
-    # Getter for the 'path' attribute
-    @property
-    def get_path(self):
-        """Get the file path."""
-        return self._path
-
-    # Getter for the 'type' attribute
-    @property
-    def get_type(self):
-        """Get the file type."""
-        return self._type
 
     def ensure_default_files_and_folder_exist(self):
         """
@@ -117,24 +115,26 @@ class FileProcessor:
 
     def append_all_feeds_from_txt_or_csv_file(self):
         feeds_from_file = []
-
         with open(self._path, "r") as file:
             for line in file:
-                line = line.strip()
-                instance = create_feed_instance(line)
-                print(f"instance with type {type(instance)} has been found: {instance}")
-                if instance is not None:
-                    feeds_from_file.append(instance)
+                line = line.strip().split(",")
+                if len(line) < 2:
+                    continue
+                feed_type, *values = [field.strip() for field in line]
 
-        print(f'Feeds from file: {self._path} were added to {self._DEFAULT_DESTINATION_PATH} file')
+                if feed_type.lower() == "news" and len(values) == 2:
+                    feeds_from_file.append(Feeds.News(text=values[0], city=values[1]))
+                elif feed_type.lower() == "lucky number" and len(values) == 1:
+                    feeds_from_file.append(Feeds.LuckyNumber(name=values[0]))
 
-        with open(self._DEFAULT_DESTINATION_PATH, 'a') as file:
+        with open(self._DEFAULT_DESTINATION_PATH, "a") as file:
             for feed in feeds_from_file:
                 file.write(str(feed) + "\n")
 
-        print(f'File {self._path} has been removed.')
-        os.remove(self._path)
+        print(f"Feeds from file: {self._path} were added to {self._DEFAULT_DESTINATION_PATH} file")
 
+        os.remove(self._path)
+        print(f"File {self._path} has been removed.")
         self.csv_parsing(self._DEFAULT_DESTINATION_PATH)
 
     def csv_parsing(self, path: str):
@@ -193,19 +193,31 @@ class FileProcessor:
             print(f"Error: Could not read or parse file {file_path}. Exception: {e}")
             return None
 
-        feeds = []
+        if not isinstance(data, list):
+            print(f"Error: Expected a list of objects in the JSON file {file_path}.")
+            return None
 
-        if isinstance(data, list):
-            for item in data:
-                feed = self.process_feed_object(item)
-                if feed:
-                    feeds.append(feed)
-        elif isinstance(data, dict):
-            feed = self.process_feed_object(data)
-            if feed:
-                feeds.append(feed)
-        else:
-            print(f"Error: Unexpected JSON format in {file_path}. Expected an array or object.")
+        feeds = []
+        for item in data:
+            feed_type = item.get('type', '').lower()
+
+            if feed_type == 'news':
+                text = item.get('text')
+                city = item.get('city')
+                if text and city:
+                    feeds.append(Feeds.News(text=text, city=city))
+                else:
+                    print("Error: Missing required fields for News.")
+
+            elif feed_type == 'lucky_number':
+                name = item.get('name')
+                lucky_number = item.get('lucky_number')
+                if name:
+                    feeds.append(Feeds.LuckyNumber(name=name, lucky_number=lucky_number))
+                else:
+                    print("Error: Missing required fields for Lucky Number.")
+            else:
+                print(f"Error: Unsupported feed type '{feed_type}' in JSON.")
 
         return feeds
 
