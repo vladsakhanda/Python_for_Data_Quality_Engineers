@@ -15,6 +15,7 @@ from classes.Feeds import *
 class FileProcessor:
     _DEFAULT_FILE = 'feeds.txt'
     VALID_TYPES = ('txt', 'csv', 'json',)
+    _DEFAULT_TYPE = 'txt'
     _VALID_FEEDS = (Feeds.News, Feeds.PrivateAd, Feeds.LuckyNumber)
 
     _DEFAULT_FOLDER = 'default'
@@ -27,13 +28,16 @@ class FileProcessor:
             self.identify_type_of_file(path)
         elif path is None:
             '''As path is None, default path will be used.'''
-            if type not in FileProcessor.VALID_TYPES:
-                raise TypeError(
-                    f"Unsupported file type '{type}'. Supported types are: {', '.join(FileProcessor.VALID_TYPES)}.")
+            if type is not None:
+                if type not in FileProcessor.VALID_TYPES:
+                    raise TypeError(
+                        f"Unsupported file type '{type}'. Supported types are: {', '.join(FileProcessor.VALID_TYPES)}.")
+                else:
+                    self._type = type
             else:
-                self._type = type
+                self._type = self._DEFAULT_TYPE
 
-        self._path = path if path else f"{self._DEFAULT_PATH}{type}"
+        self._path = path if path else f"{self._DEFAULT_PATH}{self._type}"
 
         self.ensure_default_files_and_folder_exist()
         self.ensure_file_exists()
@@ -59,6 +63,8 @@ class FileProcessor:
             raise FileNotFoundError(
                 f"File '{self._path}' does not exist.")
 
+        print(self._path)
+        print(self._type)
         if not self._path.endswith('.' + self._type):
             raise TypeError(
                 f"File type does not match requirements for type. It is expected: '{self._type}'.")
