@@ -1,7 +1,5 @@
-from classes.FileProcessor import FileProcessor
-from classes.Functions import *
 from classes.Feeds import Feeds
-from classes.JSONFileProcessor import JSONFileProcessor
+from classes.Functions import *
 
 
 def first_choice_flow():
@@ -58,33 +56,24 @@ def second_choice_flow():
     print('2. Add feeds from one of the default files\n')
 
     file_type = choose_file_type()
-    if file_type == 'json':
-        json_processor = JSONFileProcessor()
-        print(f"'{json_processor.get_path}' path and 'json' type have been chosen")
-        json_processor.append_feeds_from_json()
-    else:
-        file_processor = FileProcessor(None, file_type)
-        print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
-        file_processor.append_all_feeds_from_file()
 
-
-
+    file_processor = FileProcessor(None, file_type)
+    print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
+    file_processor.append_all_feeds_from_file()
 
 def third_choice_flow():
     print('---')
     print('3. Add feeds from a specific file\n')
 
-    file_type = choose_file_type()
-    file_path = choose_file_path()
-
-    if file_type == 'json':
-        json_processor = JSONFileProcessor(file_path)
-        print(f"'{json_processor.get_path}' path and 'json' type have been chosen")
-        json_processor.append_feeds_from_json()
-    else:
-        file_processor = FileProcessor(None, file_type)
-        print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
-        file_processor.append_all_feeds_from_file()
+    while True:
+        try:
+            file_path = choose_file_path()
+            file_processor = FileProcessor(file_path)
+            print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
+            file_processor.append_all_feeds_from_file()
+            break
+        except TypeError as e:
+            print(e, end='\n\n')
 
 
 print('Hello!', end=' ')
