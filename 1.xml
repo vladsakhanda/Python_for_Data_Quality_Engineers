@@ -1,0 +1,14 @@
+<feeds>
+    <feed type="news">
+        <text>Breaking news: Python is awesome!</text>
+        <city>San Francisco</city>
+    </feed>
+    <feed type="lucky_number">
+        <name>Alice</name>
+        <lucky_number>42</lucky_number>
+    </feed>
+    <feed type="private_ad">
+        <text>Buy one, get one free!</text>
+        <expiration_date>15/10/2023</expiration_date>
+    </feed>
+</feeds>

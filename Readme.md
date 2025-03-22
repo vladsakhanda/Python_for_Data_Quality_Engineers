@@ -1,6 +1,6 @@
-## JSON Module
+## XML
 
-Expand previous Homework 5/6/7 with additional class, which allow to provide records by JSON file:
+Expand previous Homework 5/6/7/8 with additional class, which allow to provide records by XML file:
 
 1.Define your input format (one or many records)
 
