@@ -1,11 +1,16 @@
 [
-    {
-        "type": "news",
-        "text": "Vlad",
-        "city": "Kyiv"
-    },
-    {
-        "type": "lucky_number",
-        "name": "Vlad"
-    }
+  {
+    "type": "news",
+    "text": "Vlad",
+    "city": "Kyiv"
+  },
+  {
+    "type": "lucky_number",
+    "name": "Vlad"
+  },
+  {
+    "type": "private_ad",
+    "text": "Buy one, get one free!",
+    "expiration_date": "15/10/2023"
+  }
 ]
