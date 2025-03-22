@@ -42,14 +42,27 @@ class Feeds:
         def __str__(self):
             return f"Lucky Number: {self.name}, your lucky number is {self.lucky_number}!"
 
+        def to_dict(self):
+            return {
+                "type": "lucky_number",
+                "name": self.name,
+            }
+
     class News:
-        def __init__(self, text: str, city: str, date=None):
+        def __init__(self, text: str, city: str):
             self.text = text
             self.city = city
-            self.date = date if date else datetime.now().strftime(DATETIME_FORMAT)
+            self.date = datetime.now().strftime(DATETIME_FORMAT)
 
         def __str__(self):
             return f"News: {self.text}, {self.city}, {self.date} "
+
+        def to_dict(self):
+            return {
+                "type": "news",
+                "text": self.text,
+                "city": self.city
+            }
 
     class PrivateAd:
         DATETIME_FORMAT = "%d/%m/%Y"
@@ -61,3 +74,10 @@ class Feeds:
         def __str__(self):
             days_left = (self.expiration_date - datetime.now()).days
             return f"Private Ad: {self.text}, until: {self.expiration_date.strftime(self.DATETIME_FORMAT)}, {days_left} days left"
+
+        def to_dict(self):
+            return {
+                "type": "private_ad",
+                "text": self.text,
+                "expiration_date": self.expiration_date.strftime(self.DATETIME_FORMAT)
+            }

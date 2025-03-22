@@ -1,0 +1,11 @@
+[
+    {
+        "type": "news",
+        "text": "Vlad",
+        "city": "Kyiv"
+    },
+    {
+        "type": "lucky_number",
+        "name": "Vlad"
+    }
+]

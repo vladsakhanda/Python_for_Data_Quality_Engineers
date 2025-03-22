@@ -1,0 +1,15 @@
+[
+    {
+        "type": "news",
+        "text": "Vlad",
+        "city": "Kyiv"
+    },
+    {
+        "type": "lucky_number",
+        "name": "Vlad"
+    }
+    {
+        "type": "private_add",
+        "name": ""
+    }
+]
