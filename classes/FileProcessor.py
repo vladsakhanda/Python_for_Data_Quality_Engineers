@@ -14,7 +14,7 @@ from classes.Feeds import *
 
 class FileProcessor:
     _DEFAULT_FILE = 'feeds.txt'
-    VALID_TYPES = ('txt', 'csv', 'json',)
+    VALID_TYPES = ('txt', 'json',)
     _DEFAULT_TYPE = 'txt'
     _VALID_FEEDS = (Feeds.News, Feeds.PrivateAd, Feeds.LuckyNumber)
 
@@ -23,7 +23,7 @@ class FileProcessor:
     _DEFAULT_PATH = _DEFAULT_FOLDER + '/info.'
 
     def __init__(self, path: str = None, type: str = None):
-        if path is not None and type is None:
+        if path and not type:
             '''As type isn't defined, the program will try to identify it automatically.'''
             self.identify_type_of_file(path)
         elif path is None:
@@ -110,7 +110,7 @@ class FileProcessor:
     def append_all_feeds_from_file(self):
         if self._type == 'json':
             self.append_feeds_from_json()
-        elif self._type in ('txt', 'csv'):
+        elif self._type in ('txt'):
             self.append_all_feeds_from_txt_or_csv_file()
 
     def append_all_feeds_from_txt_or_csv_file(self):
@@ -126,6 +126,9 @@ class FileProcessor:
                     feeds_from_file.append(Feeds.News(text=values[0], city=values[1]))
                 elif feed_type.lower() == "lucky number" and len(values) == 1:
                     feeds_from_file.append(Feeds.LuckyNumber(name=values[0]))
+                elif feed_type.lower() == "private add" and len(values) == 2:
+                    expiration_date = datetime.strptime(values[1].strip(), "%d/%m/%Y")
+                    feeds_from_file.append(Feeds.PrivateAd(text=values[0], expiration_date=expiration_date))
 
         with open(self._DEFAULT_DESTINATION_PATH, "a") as file:
             for feed in feeds_from_file:

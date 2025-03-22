@@ -8,4 +8,8 @@
         "type": "lucky_number",
         "name": "Vlad"
     }
+    {
+        "type": "private_add",
+        "name": ""
+    }
 ]
