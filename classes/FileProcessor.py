@@ -219,6 +219,20 @@ class FileProcessor:
                     feeds.append(Feeds.LuckyNumber(name=name, lucky_number=lucky_number))
                 else:
                     print("Error: Missing required fields for Lucky Number.")
+
+            elif feed_type == 'private_ad':
+                text = item.get('text')
+                expiration_date_str = item.get('expiration_date')
+                if text and expiration_date_str:
+                    try:
+                        expiration_date = datetime.strptime(expiration_date_str, "%d/%m/%Y")
+                        feeds.append(Feeds.PrivateAd(text=text, expiration_date=expiration_date))
+                    except ValueError:
+                        print(
+                            f"Error: Invalid date format for Private Ad. Expected 'dd/mm/yyyy', got '{expiration_date_str}'.")
+                else:
+                    print("Error: Missing required fields for Private Ad.")
+
             else:
                 print(f"Error: Unsupported feed type '{feed_type}' in JSON.")
 
