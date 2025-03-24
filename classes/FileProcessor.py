@@ -8,13 +8,14 @@ from json.decoder import JSONDecodeError
 import csv
 import os
 from collections import Counter
+import xml.etree.ElementTree as ET
 
 from classes.Feeds import *
 
 
 class FileProcessor:
     _DEFAULT_FILE = 'feeds.txt'
-    VALID_TYPES = ('txt', 'json',)
+    VALID_TYPES = ('txt', 'json', 'xml')
     _DEFAULT_TYPE = 'txt'
     _VALID_FEEDS = (Feeds.News, Feeds.PrivateAd, Feeds.LuckyNumber)
 
@@ -112,6 +113,8 @@ class FileProcessor:
             self.append_feeds_from_json()
         elif self._type in ('txt'):
             self.append_all_feeds_from_txt_or_csv_file()
+        elif self._type in ('xml'):
+            self.append_feeds_from_xml()
 
     def append_all_feeds_from_txt_or_csv_file(self):
         feeds_from_file = []
@@ -274,3 +277,71 @@ class FileProcessor:
             print(f"Error: Unrecognized feed type `{feed_type}`.")
 
         return None
+
+    def append_feeds_from_xml(self, file_path=None):
+        """
+        Processes an XML file containing feed records.
+        """
+        if not file_path:
+            file_path = self._path
+
+        if not os.path.exists(file_path):
+            print(f"Error: File {file_path} does not exist.")
+            return None
+
+        try:
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+
+            feeds = []
+            for feed in root.findall("feed"):
+                feed_type = feed.get("type", "").lower()
+
+                if feed_type == "news":
+                    text = feed.find("text").text
+                    city = feed.find("city").text
+                    if text and city:
+                        feeds.append(Feeds.News(text=text, city=city))
+                    else:
+                        print("Error: Missing required fields for News.")
+
+                elif feed_type == "lucky_number":
+                    name = feed.find("name").text
+                    lucky_number = feed.find("lucky_number").text
+                    lucky_number = int(lucky_number) if lucky_number else None
+                    if name:
+                        feeds.append(Feeds.LuckyNumber(name=name, lucky_number=lucky_number))
+                    else:
+                        print("Error: Missing required fields for Lucky Number.")
+
+                elif feed_type == "private_ad":
+                    text = feed.find("text").text
+                    expiration_date_str = feed.find("expiration_date").text
+                    if text and expiration_date_str:
+                        try:
+                            expiration_date = datetime.strptime(expiration_date_str, "%d/%m/%Y")
+                            feeds.append(Feeds.PrivateAd(text=text, expiration_date=expiration_date))
+                        except ValueError:
+                            print(
+                                f"Error: Invalid date format for Private Ad. Expected 'dd/mm/yyyy', got '{expiration_date_str}'.")
+                    else:
+                        print("Error: Missing required fields for Private Ad.")
+
+                else:
+                    print(f"Error: Unsupported feed type '{feed_type}' in XML.")
+
+            with open(self._DEFAULT_DESTINATION_PATH, "a") as destination_file:
+                for feed in feeds:
+                    destination_file.write(str(feed) + "\n")
+
+            os.remove(file_path)
+            print(f"File {file_path} successfully processed and removed.")
+
+            return feeds
+
+        except ET.ParseError as e:
+            print(f"Error: Failed to parse XML file {file_path}. Exception: {e}")
+            return None
+        except Exception as e:
+            print(f"Error: An unexpected error occurred while processing {file_path}. Exception: {e}")
+            return None
