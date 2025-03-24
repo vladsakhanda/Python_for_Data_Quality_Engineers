@@ -1,14 +1,10 @@
 import csv
 import json
 import os
-import re
-from collections import Counter
-from datetime import datetime
-from json.decoder import JSONDecodeError
-import csv
-import os
-from collections import Counter
+import sqlite3
 import xml.etree.ElementTree as ET
+from collections import Counter
+from json.decoder import JSONDecodeError
 
 from classes.Feeds import *
 
@@ -22,6 +18,7 @@ class FileProcessor:
     _DEFAULT_FOLDER = 'default'
     _DEFAULT_DESTINATION_PATH = _DEFAULT_FOLDER + '/feeds.txt'
     _DEFAULT_PATH = _DEFAULT_FOLDER + '/info.'
+    _DB = "feeds.db"
 
     def __init__(self, path: str = None, type: str = None):
         if path and not type:
@@ -40,8 +37,12 @@ class FileProcessor:
 
         self._path = path if path else f"{self._DEFAULT_PATH}{self._type}"
 
+        self._conn = sqlite3.connect(self._DB)
+        self._cursor = self._conn.cursor()
+
         self.ensure_default_files_and_folder_exist()
         self.ensure_file_exists()
+        self.ensure_database_exists()
 
     def __str__(self):
         return f"FileProcessor(path='{self._path}', type='{self._type}')"
@@ -70,6 +71,11 @@ class FileProcessor:
         Validates that the file exists and matches the expected type.
         Raises an error if the file does not exist or the type is invalid.
         """
+        files_to_check = [
+            "1.csv", "1.txt", "1.json", "1.xml",
+            "default/info.txt", "default/info.json", "default/info.xml", "default/info.csv"
+        ]
+
         if not os.path.exists(self._path):
             raise FileNotFoundError(
                 f"File '{self._path}' does not exist.")
@@ -79,6 +85,15 @@ class FileProcessor:
         if not self._path.endswith('.' + self._type):
             raise TypeError(
                 f"File type does not match requirements for type. It is expected: '{self._type}'.")
+
+        for file_path in files_to_check:
+            if not os.path.exists(file_path):
+                folder = os.path.dirname(file_path)
+                if folder and not os.path.exists(folder):
+                    os.makedirs(folder, exist_ok=True)
+
+                with open(file_path, "w") as file:
+                    file.close()
 
     def ensure_default_files_and_folder_exist(self):
         """
@@ -137,6 +152,9 @@ class FileProcessor:
             for feed in feeds_from_file:
                 file.write(str(feed) + "\n")
 
+        for feed in feeds_from_file:
+            self.save_one_feed_to_db(feed)
+
         print(f"Feeds from file: {self._path} were added to {self._DEFAULT_DESTINATION_PATH} file")
 
         os.remove(self._path)
@@ -182,6 +200,9 @@ class FileProcessor:
                 destination_file.write(str(feed) + "\n")
 
         print(f"Feeds from '{self._path}' successfully appended to '{self._DEFAULT_DESTINATION_PATH}'.")
+
+        for feed in feeds:
+            self.save_one_feed_to_db(feed)
 
         os.remove(self._path)
         print(f"File '{self._path}' has been removed after successful processing.")
@@ -334,6 +355,9 @@ class FileProcessor:
                 for feed in feeds:
                     destination_file.write(str(feed) + "\n")
 
+            for feed in feeds:
+                self.save_one_feed_to_db(feed)
+
             os.remove(file_path)
             print(f"File {file_path} successfully processed and removed.")
 
@@ -345,3 +369,74 @@ class FileProcessor:
         except Exception as e:
             print(f"Error: An unexpected error occurred while processing {file_path}. Exception: {e}")
             return None
+
+    def ensure_database_exists(self):
+        self._cursor.execute("""
+                CREATE TABLE IF NOT EXISTS news (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    text TEXT NOT NULL,
+                    city TEXT NOT NULL,
+                    date TEXT NOT NULL,
+                    UNIQUE(text, city, date)
+                )
+                """)
+
+        self._cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS lucky_number (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        lucky_number INTEGER NOT NULL,
+                        UNIQUE(name, lucky_number)
+                    )
+                    """)
+        self._cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS private_ad (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        text TEXT NOT NULL,
+                        expiration_date TEXT NOT NULL,
+                        UNIQUE(text, expiration_date)
+                    )
+                    """)
+
+        self._conn.commit()
+
+    def save_one_feed_to_db(self, feed: (Feeds.News, Feeds.LuckyNumber, Feeds.PrivateAd)):
+        if type(feed) is Feeds.LuckyNumber:
+            self._save_lucky_number_to_db(feed)
+        elif type(feed) is Feeds.News:
+            self._save_news_to_db(feed)
+        elif type(feed) is Feeds.PrivateAd:
+            self._save_private_ad_to_db(feed)
+
+    def _save_lucky_number_to_db(self, lucky_number: Feeds.LuckyNumber):
+        try:
+            self._cursor.execute("""
+                INSERT INTO lucky_number (name, lucky_number)
+                VALUES (?, ?)
+                """, (lucky_number.name, lucky_number.lucky_number))
+            self._conn.commit()
+            print("Lucky Number saved to database.")
+        except sqlite3.IntegrityError:
+            print("Duplicate Lucky Number record. Not saved.")
+
+    def _save_news_to_db(self, news: Feeds.News):
+        try:
+            self._cursor.execute("""
+                INSERT INTO news (text, city, date)
+                VALUES (?, ?, ?)
+                """, (news.text, news.city, news.date))
+            self._conn.commit()
+            print("News saved to database.")
+        except sqlite3.IntegrityError:
+            print("Duplicate News record. Not saved.")
+
+    def _save_private_ad_to_db(self, private_ad: Feeds.PrivateAd):
+        try:
+            self._cursor.execute("""
+            INSERT INTO private_ad (text, expiration_date)
+            VALUES (?, ?)
+            """, (private_ad.text, private_ad.expiration_date.strftime(private_ad.DATETIME_FORMAT)))
+            self._conn.commit()
+            print("Private Ad saved to database.")
+        except sqlite3.IntegrityError:
+            print("Duplicate Private Ad record. Not saved.")

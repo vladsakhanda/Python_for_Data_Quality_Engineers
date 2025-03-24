@@ -1,3 +1,7 @@
-News: Breaking news: Python is awesome!, San Francisco, 22/03/2025 20.30 
+News: Vlad, Kyiv, 24/03/2025 17.10 
+Lucky Number: Vlad, your lucky number is 3!
+Private Ad: I love Ukraine, until: 05/05/2025, 41 days left
+News: Breaking news: Python is awesome!, San Francisco, 24/03/2025 17.11 
 Lucky Number: Alice, your lucky number is 42!
-Private Ad: Buy one, get one free!, until: 15/10/2023, -525 days left
+Private Ad: Buy one, get one free!, until: 15/10/2023, -527 days left
+Lucky Number: Eee, your lucky number is 7!
