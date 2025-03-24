@@ -24,6 +24,7 @@ You choose: ''').upper()
             print('\nThe feed were added:', news, end='\n\n')
 
             FileProcessor().append_one_feed_to_file(news)
+            FileProcessor().save_one_feed_to_db(news)
         elif user_input in '2':
             text = normalize_text(input('You chose Private Ad! Enter private ad text: '))
             expiration_date = None
@@ -35,6 +36,7 @@ You choose: ''').upper()
                 if expiration_date:
                     private_ad = Feeds.PrivateAd(text, expiration_date)
                     FileProcessor().append_one_feed_to_file(private_ad)
+                    FileProcessor().save_one_feed_to_db(private_ad)
                     print('\nThe feed were added:', private_ad, end='\n\n')
                 else:
                     print('\nYour date is in the incorrect format.\n\n')
@@ -44,6 +46,7 @@ You choose: ''').upper()
             print('\nThe feed were added:', lucky_number, end='\n\n')
 
             FileProcessor().append_one_feed_to_file(lucky_number)
+            FileProcessor().save_one_feed_to_db(lucky_number)
         elif user_input in ('4', 'Back'.upper(), '4, Back'.upper()):
             print()
         else:
@@ -60,6 +63,7 @@ def second_choice_flow():
     file_processor = FileProcessor(None, file_type)
     print(f"'{file_processor.get_path}' path and '{file_processor.get_type}' type have been chosen")
     file_processor.append_all_feeds_from_file()
+    # FileProcessor().save_one_feed_to_db(lucky_number)
 
 def third_choice_flow():
     print('---')
