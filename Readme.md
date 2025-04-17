@@ -1,11 +1,10 @@
-## XML
+## Database API
 
-Expand previous Homework 5/6/7/8 with additional class, which allow to provide records by XML file:
+Expand previous Homework 5/6/7/8/9 with additional class, which allow to save records into database:
 
-1.Define your input format (one or many records)
+1.Different types of records require different data tables
 
-2.Default folder or user provided file path
+2.New record creates new row in data table
 
-3.Remove file if it was successfully processed
-
+3.Implement “no duplicate” check.
 
