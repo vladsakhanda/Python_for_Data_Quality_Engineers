@@ -1,3 +1,4 @@
+from classes import DBManagement
 from classes.Feeds import Feeds
 from classes.Functions import *
 
@@ -80,6 +81,41 @@ def third_choice_flow():
             print(e, end='\n\n')
 
 
+def fourth_choice_flow():
+    is_exit = False
+    while not is_exit:
+        print('---')
+        print('Your choice: 4. Calculate distance between two cities\n')
+
+        first_city = input('''Enter the first city name: ''')
+        if not DBManagement.does_city_exist(first_city):
+            if input('\nType 1 to add this city to the database. Type anything else to skip: ') == '1':
+                latitude = float(input('Enter latitude: '))
+                longitude = float(input('Enter longitude: '))
+                DBManagement.add_city_to_DB(first_city, latitude, longitude)
+
+
+            if input('\nType 1 to move back. Type anything else to continue: ') == '1':
+                break
+
+        second_city = input('''\nEnter the second city name: ''')
+        if not DBManagement.does_city_exist(second_city):
+            if input('\nType 1 to add this city to the database. Type anything else to skip: ') == '1':
+                latitude = float(input('Enter latitude: '))
+                longitude = float(input('Enter longitude: '))
+                DBManagement.add_city_to_DB(second_city, latitude, longitude)
+
+            if input('\nType 1 to move back. Type anything else to continue: ') == '1':
+                break
+
+        if DBManagement.does_city_exist(first_city) or DBManagement.does_city_exist(second_city):
+            print(f'Distance between {first_city} and {second_city} in kilometers:', DBManagement.distance_between_cities_in_km(first_city, second_city))
+
+        if input('\nType 1 to move back. Type anything else to continue: ') == '1':
+            break
+
+
+
 print('Hello!', end=' ')
 is_exit_first_choices = False
 while not is_exit_first_choices:
@@ -87,7 +123,8 @@ while not is_exit_first_choices:
 1. Add feeds using console
 2. Add feeds from one of the default files
 3. Add feeds from a specific file
-4, Exit
+4. Calculate distance between two cities
+5, Exit
 
 You choose: ''').upper()
 
@@ -104,8 +141,12 @@ You choose: ''').upper()
                         '3. Add feeds from a specific file'.upper()):
         third_choice_flow()
     elif user_input in ('4',
+                        'Calculate distance between two cities'.upper(),
+                        '4. Add feeds from a specific file'.upper()):
+        fourth_choice_flow()
+    elif user_input in ('5',
                         'Exit'.upper(),
-                        '4. Exit'.upper()):
+                        '5. Exit'.upper()):
         is_exit_first_choices = True
     else:
         print('No such option.', end=' ')
