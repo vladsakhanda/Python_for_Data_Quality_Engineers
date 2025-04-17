@@ -66,34 +66,7 @@ class FileProcessor:
         raise TypeError(
             f"Unsupported file type. Supported types are: {', '.join(FileProcessor.VALID_TYPES)}.")
 
-    def ensure_file_exists(self):
-        """
-        Validates that the file exists and matches the expected type.
-        Raises an error if the file does not exist or the type is invalid.
-        """
-        files_to_check = [
-            "1.csv", "1.txt", "1.json", "1.xml",
-            "default/info.txt", "default/info.json", "default/info.xml", "default/info.csv"
-        ]
 
-        if not os.path.exists(self._path):
-            raise FileNotFoundError(
-                f"File '{self._path}' does not exist.")
-
-        print(self._path)
-        print(self._type)
-        if not self._path.endswith('.' + self._type):
-            raise TypeError(
-                f"File type does not match requirements for type. It is expected: '{self._type}'.")
-
-        for file_path in files_to_check:
-            if not os.path.exists(file_path):
-                folder = os.path.dirname(file_path)
-                if folder and not os.path.exists(folder):
-                    os.makedirs(folder, exist_ok=True)
-
-                with open(file_path, "w") as file:
-                    file.close()
 
     def ensure_default_files_and_folder_exist(self):
         """
