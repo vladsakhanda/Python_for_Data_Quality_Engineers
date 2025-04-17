@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -41,6 +42,7 @@ def exit():
     else:
         return False
 
+
 def choose_file_type():
     """Prompt the user to choose a valid file type from a predefined list.
 
@@ -76,3 +78,58 @@ def choose_file_path():
         print(f"\nFile path '{file_path}'  type has been chosen.")
 
         return file_path
+
+
+def create_test_files():
+    """
+    Ensures the required files exist with specific content in the current folder.
+    Creates only the files: 1.txt, 1.csv, 1.json, and 1.xml.
+    """
+    # Define file content templates
+    files_content = {
+        "1.csv": "News, Vlad, Kyiv",
+        "1.json": json.dumps([
+            {
+                "type": "news",
+                "text": "Vlad",
+                "city": "Kyiv"
+            },
+            {
+                "type": "lucky_number",
+                "name": "Vlad"
+            },
+            {
+                "type": "private_ad",
+                "text": "Buy one, get one free!",
+                "expiration_date": "15/10/2023"
+            }
+        ], indent=2),
+        "1.txt": """News, Vlad, Kyiv
+Lucky Number, Vlad
+Private Add, I love Ukraine, 05/05/2025""",
+        "1.xml": """<feeds>
+    <feed type="news">
+        <text>Breaking news: Python is awesome!</text>
+        <city>San Francisco</city>
+    </feed>
+    <feed type="lucky_number">
+        <name>Alice</name>
+        <lucky_number>42</lucky_number>
+    </feed>
+    <feed type="private_ad">
+        <text>Buy one, get one free!</text>
+        <expiration_date>15/10/2023</expiration_date>
+    </feed>
+</feeds>"""
+    }
+
+    # Iterate through the defined files and their content
+    for file_name, content in files_content.items():
+        # Check if the file already exists
+        if not os.path.exists(file_name):
+            # Write the specified content into the file
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(content)
+                print(f"Created file: {file_name}")
+        else:
+            print(f"File already exists: {file_name}")
