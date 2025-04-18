@@ -1,7 +1,7 @@
 import math
 import sqlite3
 
-connection = sqlite3.connect("example.db")
+connection = sqlite3.connect("cities.db")
 cursor = connection.cursor()
 
 cursor.execute("""
