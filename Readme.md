@@ -1,10 +1,10 @@
-## Database API
+## Final Task
 
-Expand previous Homework 5/6/7/8/9 with additional class, which allow to save records into database:
+Create a tool which will calculate straight-line distance between different cities based on coordinates:
 
-1.Different types of records require different data tables
+1. User will provide two city names by console interface 
 
-2.New record creates new row in data table
+2. If tool do not know about city coordinates, it will ask user for input and store it in SQLite database for future use
 
-3.Implement “no duplicate” check.
+3. Return distance between cities in kilometers
 

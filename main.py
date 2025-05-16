@@ -1,3 +1,4 @@
+from classes import DBManagement
 from classes.Feeds import Feeds
 from classes.Functions import *
 
@@ -79,7 +80,6 @@ def third_choice_flow():
         except TypeError as e:
             print(e, end='\n\n')
 
-
 print('Hello!', end=' ')
 is_exit_first_choices = False
 while not is_exit_first_choices:
@@ -103,9 +103,9 @@ You choose: ''').upper()
                         'Add feeds from a specific file'.upper(),
                         '3. Add feeds from a specific file'.upper()):
         third_choice_flow()
-    elif user_input in ('4',
+    elif user_input in ('5',
                         'Exit'.upper(),
-                        '4. Exit'.upper()):
+                        '5. Exit'.upper()):
         is_exit_first_choices = True
     else:
         print('No such option.', end=' ')
